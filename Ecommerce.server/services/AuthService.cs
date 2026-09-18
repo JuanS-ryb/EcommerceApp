@@ -1,18 +1,15 @@
 ﻿using Ecommerce.server.Context;
 using Ecommerce.server.Dto;
 using Ecommerce.server.Models;
+using Ecommerce.server.services.interfaces;
+using Ecommerce.server.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Ecommerce.server.services.interfaces;
 
 
 namespace Ecommerce.server.services
 {
-    public class AuthService (AppDbContext context, IConfiguration configuration) : IAuthService
+    public class AuthService (AppDbContext context, IConfiguration configuration, JwtUtils jwt) : IAuthService
     {
         public async Task<string?> LoginAsync(UserDto request)
         {
@@ -22,50 +19,29 @@ namespace Ecommerce.server.services
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed) return null;
 
 
-            return CreateToken(user);
-        
+            return jwt.CreateToken(user);
         }
         public async Task<User?> RegisterAsync(UserDto request)
         {
             if (await context.Users.AnyAsync(u => u.Name == request.Name)) return null;
 
-            var user = new User();
-            var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password);
-
-            user.Name = request.Name;
-            user.Email = request.Email;
-            user.CreatedAt = DateTime.Now;
-            user.PasswordHash = hashedPassword;
+            var user = new User { 
+                Name = request.Name,
+                Email = request.Email,
+                CreatedAt = DateTime.Now
+            };
+            user.PasswordHash = jwt.HashMyPassword(user, request.Password);
 
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
             return user;
         }
-
-        private string CreateToken(User user)
+        public async Task<User?> GetMyUser()
         {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, user.Name),
-                new(ClaimTypes.NameIdentifier, user.Id.ToString())
-            };
+            int? myId = jwt.GetIdByToken();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-
-            var tokenDescriptor = new JwtSecurityToken(
-                issuer: configuration.GetValue<string>("AppSettings:Issuer"),
-                audience: configuration.GetValue<string>("AppSettings:Audience"),
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
-                signingCredentials: creds
-                );
-
-
-            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+            return myId is null ? throw new Exception("No User in token") : await context.Users.FirstOrDefaultAsync(u => u.Id == myId.Value);
         }
     }
-
 }

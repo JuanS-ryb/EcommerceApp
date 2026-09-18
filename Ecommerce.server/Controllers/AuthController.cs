@@ -1,6 +1,6 @@
 ﻿using Ecommerce.server.Dto;
 using Ecommerce.server.Models;
-using Ecommerce.server.services.auth;
+using Ecommerce.server.services.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,18 +21,16 @@ namespace Ecommerce.server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserDto request)
+        public async Task<ActionResult<AuthDto>> Login(UserDto request)
         {
             var token = await authService.LoginAsync(request);
             if (token is null) return BadRequest("Credenciales invalidas");
-            return Ok(token);
-        }
 
-        [Authorize]
-        [HttpGet("check")]
-        public IActionResult AuthenticationCheck()
-        {
-            return Ok("You Are logged in!!!");
+            AuthDto r = new()
+            {
+                Token = token
+            };
+            return Ok(r);
         }
     }
 }

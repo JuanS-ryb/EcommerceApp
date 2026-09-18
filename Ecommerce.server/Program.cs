@@ -1,5 +1,7 @@
 using Ecommerce.server.Context;
 using Ecommerce.server.services;
+using Ecommerce.server.services.interfaces;
+using Ecommerce.server.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -34,7 +36,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddHttpContextAccessor();
+
+//SERVICES
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<ICartService, CartService>();
+//UTILS
+builder.Services.AddScoped<JwtUtils>();
+
 
 var app = builder.Build();
 
@@ -42,7 +52,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("Ecommerce API's")
+                .WithTheme(ScalarTheme.DeepSpace)
+                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.Http);
+    });
     app.UseSwagger();
     app.UseSwaggerUI();
 }

@@ -1,14 +1,15 @@
 ﻿using Ecommerce.server.Context;
 using Ecommerce.server.Dto;
+using Ecommerce.server.Mappings;
 using Ecommerce.server.Models;
-using Microsoft.EntityFrameworkCore;
 using Ecommerce.server.services.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.server.services
 {
     public class ProductoService(AppDbContext context) : IProductoService
     {
-        public async Task<List<Product>?> GetProductosAsync(string? term)
+        public async Task<List<ProductoDto>?> GetProductosAsync(string? term)
         {
             IQueryable<Product> query = context.Products.AsQueryable();
 
@@ -19,17 +20,17 @@ namespace Ecommerce.server.services
             }
 
             List<Product> result = await query.ToListAsync();
-            return result;
+            return [.. result.Select(p => p.ToDto())];
         }
 
-        public async Task<Product?> GetProductoAsync(int id)
+        public async Task<ProductoDto?> GetProductoAsync(int id)
         {
             Product? product = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-            return product;
+            return product is null ? throw new Exception("No se encontro el producto") : product.ToDto();
         }
 
-        public async Task<Product?> CreateProductAsync(ProductoDto request)
+        public async Task<ProductoDto?> CreateProductAsync(CreateUpdateProductoDto request)
         {
             bool exists = await context.Products
                 .AnyAsync(p => p.Name == request.Name);
@@ -55,10 +56,10 @@ namespace Ecommerce.server.services
             await context.SaveChangesAsync();
 
 
-            return producto;
+            return producto.ToDto();
         }
 
-        public async Task<Product?> UpdateProductAsync(int id, ProductoDto request)
+        public async Task<ProductoDto?> UpdateProductAsync(int id, CreateUpdateProductoDto request)
         {
             var producto = await context.Products.FindAsync(id);
 
@@ -86,7 +87,7 @@ namespace Ecommerce.server.services
 
             await context.SaveChangesAsync();
 
-            return producto;
+            return producto.ToDto();
         }
     }
 }

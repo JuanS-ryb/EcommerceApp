@@ -1,10 +1,7 @@
 ﻿using Ecommerce.server.Dto;
-using Ecommerce.server.Models;
-using Ecommerce.server.services.auth;
-using Ecommerce.server.services.producto;
+using Ecommerce.server.services.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Ecommerce.server.Controllers
 {
@@ -13,18 +10,23 @@ namespace Ecommerce.server.Controllers
     public class ProductoController(IProductoService productoService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProductos([FromQuery] string? term)
+        public async Task<ActionResult<List<ProductoDto>>> GetProductos([FromQuery] string? term)
         {
-            var productos = await productoService.GetProductosAsync(term);
+            List<ProductoDto> productos = await productoService.GetProductosAsync(term) ?? [];
 
             return Ok(productos);
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Product>>> GetProducto(int id)
+        public async Task<ActionResult<List<ProductoDto>>> GetProducto(string id)
         {
-            Product? producto = await productoService.GetProductoAsync(id);
+            if (!int.TryParse(id, out int prod) || prod <= 0)
+            {
+                return BadRequest(new { message = $"El id de producto '{id}' no es válido." });
+            }
+
+            ProductoDto? producto = await productoService.GetProductoAsync(prod);
 
             if (producto is null) return NotFound("No se pudo encontrar el producto con el id " + id);
 
@@ -33,9 +35,13 @@ namespace Ecommerce.server.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> Update(int id, ProductoDto request)
+        public async Task<ActionResult<ProductoDto>> Update(string id, CreateUpdateProductoDto request)
         {
-            var producto = await productoService.UpdateProductAsync(id, request);
+            if (!int.TryParse(id, out int prod) || prod <= 0)
+            {
+                return BadRequest(new { message = $"El id de producto '{id}' no es válido." });
+            }
+            ProductoDto? producto = await productoService.UpdateProductAsync(prod, request);
 
             if (producto is null)
                 return NotFound();
@@ -45,11 +51,11 @@ namespace Ecommerce.server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Product>> Create(ProductoDto request)
+        public async Task<ActionResult<ProductoDto>> Create(CreateUpdateProductoDto request)
         {
             try
             {
-                var producto = await productoService.CreateProductAsync(request);
+                ProductoDto? producto = await productoService.CreateProductAsync(request);
                 if (producto is null) return NotFound();
 
                 return Ok(producto);

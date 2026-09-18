@@ -4,7 +4,7 @@ using Ecommerce.server.Models;
 using Ecommerce.server.services.interfaces;
 using EcommerceApi.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using EcommerceApi.Mappings;
+using Ecommerce.server.Mappings;
 
 namespace Ecommerce.server.services
 {
@@ -20,7 +20,7 @@ namespace Ecommerce.server.services
 
             return new CartDto
             {
-                Items = items.Select(i => i.ToDto()).ToList()
+                Items = [.. items.Select(i => i.ToDto())]
             };
         }
 

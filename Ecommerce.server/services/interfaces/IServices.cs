@@ -1,20 +1,22 @@
 ﻿using Ecommerce.server.Dto;
 using Ecommerce.server.Models;
+using EcommerceApi.DTOs.Orders;
 
 namespace Ecommerce.server.services.interfaces
 {
     public interface IProductoService
     {
-        Task<List<Product>?> GetProductosAsync(string? term);
-        Task<Product?> GetProductoAsync(int id);
-        Task<Product?> CreateProductAsync(ProductoDto request);
-        Task<Product?> UpdateProductAsync(int id, ProductoDto request);
+        Task<List<ProductoDto>?> GetProductosAsync(string? term);
+        Task<ProductoDto?> GetProductoAsync(int id);
+        Task<ProductoDto?> CreateProductAsync(CreateUpdateProductoDto request);
+        Task<ProductoDto?> UpdateProductAsync(int id, CreateUpdateProductoDto request);
     }
 
     public interface IAuthService
     {
         Task<string?> LoginAsync(UserDto request);
         Task<User?> RegisterAsync(UserDto request);
+        Task<User?> GetMyUser();
     }
 
     public interface ICartService
@@ -23,5 +25,11 @@ namespace Ecommerce.server.services.interfaces
         Task<CartDto> AddItemAsync(int userId, AddToCartRequestDto request);
         Task<CartDto> UpdateItemAsync(int userId, int productId, UpdateCartItemRequestDto request);
         Task<CartDto> RemoveItemAsync(int userId, int productId);
+    }
+
+    public interface IOrderService
+    {
+        Task<OrderDto> CheckoutAsync(int userId);
+        Task<List<OrderDto>> GetUserOrdersAsync(int userId);
     }
 }
