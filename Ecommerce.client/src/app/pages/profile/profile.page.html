@@ -1,0 +1,48 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="app-gradient-header">
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (isLoggedIn()) {
+    <div class="profile-header">
+      <ion-icon name="person-circle-outline" class="profile-avatar"></ion-icon>
+      <h2>{{ userName() }}</h2>
+      <ion-text color="medium">Cuenta activa</ion-text>
+    </div>
+
+    <div class="profile-menu">
+      <ion-item button detail="true" (click)="router.navigate(['/tabs/cart'])">
+        <ion-icon slot="start" name="cart-outline" color="primary"></ion-icon>
+        <ion-label>Mi carrito</ion-label>
+      </ion-item>
+      <ion-item button detail="true" (click)="router.navigate(['/tabs/orders'])">
+        <ion-icon slot="start" name="receipt-outline" color="primary"></ion-icon>
+        <ion-label>Mis pedidos</ion-label>
+      </ion-item>
+    </div>
+
+    <div class="logout-section">
+      <ion-button expand="block" color="danger" fill="outline" (click)="logout()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <h2>No has iniciado sesión</h2>
+      <p>Ingresa o regístrate para gestionar tu cuenta.</p>
+    </div>
+
+    <div class="auth-buttons">
+      <ion-button expand="block" color="primary" (click)="goToLogin()">
+        Iniciar sesión
+      </ion-button>
+      <ion-button expand="block" fill="outline" color="primary" (click)="goToRegister()">
+        Registrarme
+      </ion-button>
+    </div>
+  }
+</ion-content>

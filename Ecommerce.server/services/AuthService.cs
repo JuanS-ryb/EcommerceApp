@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.server.services
 {
-    public class AuthService (AppDbContext context, IConfiguration configuration, JwtUtils jwt) : IAuthService
+    public class AuthService (AppDbContext context, JwtUtils jwt) : IAuthService
     {
-        public async Task<string?> LoginAsync(UserDto request)
+        public async Task<AuthDto?> LoginAsync(UserDto request)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Name == request.Name);
             if (user is null) return null;
@@ -19,7 +19,12 @@ namespace Ecommerce.server.services
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed) return null;
 
 
-            return jwt.CreateToken(user);
+            return new()
+            {
+                Token = jwt.CreateToken(user),
+                Email = user.Email,
+                Name = user.Name
+            };
         }
         public async Task<User?> RegisterAsync(UserDto request)
         {

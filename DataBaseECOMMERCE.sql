@@ -61,7 +61,10 @@ CREATE TABLE Orders (
     OrderDate  DATETIME2      NOT NULL DEFAULT SYSUTCDATETIME(),
     Total      DECIMAL(12,2)  NOT NULL CHECK (Total >= 0),
     Status     NVARCHAR(30)   NOT NULL DEFAULT 'Completed',
-        -- valores esperados: Completed | Cancelled (no se requieren pagos reales)
+    PaymentMethod NVARCHAR(50)   NULL,
+    Address       NVARCHAR(250)  NULL,
+        -- valores esperados: Completed | Cancelled
+        -- métodos de pago: ejemplo Card | Cash | Transfer
 
     CONSTRAINT FK_Orders_Users
         FOREIGN KEY (UserId) REFERENCES Users(Id)

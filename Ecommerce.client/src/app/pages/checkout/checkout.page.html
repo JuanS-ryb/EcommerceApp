@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="app-gradient-header">
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/tabs/cart" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Checkout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (loading()) {
+    <div class="loading-wrapper">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (!cart() || cart()!.items.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h2>Carrito vacío</h2>
+      <p>Agrega productos antes de finalizar la compra.</p>
+    </div>
+  } @else {
+    <div class="checkout-section">
+      <h2 class="section-title">
+        <ion-icon name="location-outline"></ion-icon>
+        Dirección de envío
+      </h2>
+      <ion-item class="checkout-input">
+        <ion-input
+          label="Dirección"
+          labelPlacement="floating"
+          placeholder="Calle, número, ciudad"
+          [(ngModel)]="shippingAddress"
+        ></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="checkout-section">
+      <h2 class="section-title">
+        <ion-icon name="card-outline"></ion-icon>
+        Método de pago
+      </h2>
+      <ion-item class="checkout-input">
+        <ion-input
+          label="Método"
+          labelPlacement="floating"
+          placeholder="Tarjeta / Efectivo"
+          [(ngModel)]="paymentMethod"
+        ></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="checkout-section">
+      <h2 class="section-title">Resumen del pedido</h2>
+      <div class="order-summary">
+        @for (item of cart()!.items; track item.productId) {
+          <div class="summary-item">
+            <span class="item-name">{{ item.quantity }}x {{ item.product.name }}</span>
+            <span class="item-price">${{ item.subtotal.toFixed(2) }}</span>
+          </div>
+        }
+        <div class="summary-divider"></div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span class="total-amount">${{ cart()!.total.toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</ion-content>
+
+@if (cart() && cart()!.items.length > 0) {
+  <ion-footer class="checkout-footer">
+    <ion-button
+      expand="block"
+      color="primary"
+      (click)="placeOrder()"
+      [disabled]="processing()"
+    >
+      @if (processing()) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+      } @else {
+        <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+      }
+      Confirmar pedido
+    </ion-button>
+  </ion-footer>
+}

@@ -1,0 +1,54 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-wrapper">
+    <div class="auth-header">
+      <ion-icon name="storefront-outline" class="auth-logo"></ion-icon>
+      <h1>Iniciar Sesión</h1>
+      <p>Ingresa para continuar comprando</p>
+    </div>
+
+    <div class="auth-form">
+      <ion-item class="auth-input">
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-input
+          label="Usuario"
+          labelPlacement="floating"
+          placeholder="Tu nombre de usuario"
+          [(ngModel)]="credentials().name"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item class="auth-input">
+        <ion-icon slot="start" name="lock-outline"></ion-icon>
+        <ion-input
+          label="Contraseña"
+          labelPlacement="floating"
+          type="password"
+          placeholder="Tu contraseña"
+          [(ngModel)]="credentials().password"
+        ></ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        color="primary"
+        class="auth-submit"
+        (click)="login()"
+        [disabled]="loading()"
+      >
+        @if (loading()) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+        } @else {
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+        }
+        Ingresar
+      </ion-button>
+
+      <div class="auth-footer">
+        <ion-text color="medium">¿No tienes cuenta?</ion-text>
+        <ion-button fill="clear" color="primary" (click)="goToRegister()">
+          Regístrate
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

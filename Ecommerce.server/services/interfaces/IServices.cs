@@ -14,7 +14,7 @@ namespace Ecommerce.server.services.interfaces
 
     public interface IAuthService
     {
-        Task<string?> LoginAsync(UserDto request);
+        Task<AuthDto?> LoginAsync(UserDto request);
         Task<User?> RegisterAsync(UserDto request);
         Task<User?> GetMyUser();
     }
@@ -29,7 +29,7 @@ namespace Ecommerce.server.services.interfaces
 
     public interface IOrderService
     {
-        Task<OrderDto> CheckoutAsync(int userId);
+        Task<OrderDto> CheckoutAsync(int userId, CreateOrderDto request);
         Task<List<OrderDto>> GetUserOrdersAsync(int userId);
     }
 }

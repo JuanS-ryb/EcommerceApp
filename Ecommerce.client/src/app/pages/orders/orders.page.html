@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="app-gradient-header">
+    <ion-title>Mis Pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (loading()) {
+    <div class="loading-wrapper">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="empty-state">
+      <ion-icon name="receipt-outline"></ion-icon>
+      <h2>Sin pedidos</h2>
+      <p>Aún no has realizado ningún pedido.</p>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <ion-item class="order-item" lines="full">
+          <div class="order-icon" slot="start">
+            <ion-icon name="receipt-outline"></ion-icon>
+          </div>
+          <ion-label>
+            <h3>Pedido #{{ order.id }}</h3>
+            <p>{{ order.orderDate | date: 'medium' }}</p>
+            <p class="order-items-count">
+              {{ order.items.length }} producto(s)
+            </p>
+          </ion-label>
+          <div slot="end" class="order-end">
+            <ion-badge [color]="getStatusColor(order.status)">
+              {{ order.status }}
+            </ion-badge>
+            <ion-text class="order-total">${{ order.total.toFixed(2) }}</ion-text>
+          </div>
+        </ion-item>
+      }
+    </div>
+  }
+</ion-content>

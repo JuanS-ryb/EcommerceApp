@@ -1,0 +1,46 @@
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1.5rem 2rem;
+
+  .profile-avatar {
+    font-size: 5rem;
+    color: var(--ion-color-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+  }
+
+  ion-text {
+    font-size: 0.85rem;
+  }
+}
+
+.profile-menu {
+  margin: 0 1rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--ion-item-background);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  ion-item {
+    --padding-start: 1rem;
+  }
+}
+
+.logout-section {
+  padding: 2rem 1.5rem;
+}
+
+.auth-buttons {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

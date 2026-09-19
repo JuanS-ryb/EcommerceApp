@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.server.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class OrderController(IOrderService orderService, JwtUtils jwt) : ControllerBase
     {
         [Authorize]
-        [HttpGet("checkOut")]
-        public async Task<ActionResult<OrderDto>> CheckoutAsync()
+        [HttpPost("checkOut")]
+        public async Task<ActionResult<OrderDto>> CheckoutAsync(CreateOrderDto request)
         {
             int? usr = jwt.GetIdByToken();
 
             if (usr == null) return BadRequest("Usuario invaldio");
 
-            OrderDto myOrder = await orderService.CheckoutAsync(usr.Value);
+            OrderDto myOrder = await orderService.CheckoutAsync(usr.Value, request);
             return Ok(myOrder);
         }
 

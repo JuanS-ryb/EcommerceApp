@@ -23,14 +23,10 @@ namespace Ecommerce.server.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthDto>> Login(UserDto request)
         {
-            var token = await authService.LoginAsync(request);
-            if (token is null) return BadRequest("Credenciales invalidas");
+            AuthDto? lgdResponse = await authService.LoginAsync(request);
+            if (lgdResponse is null) return BadRequest("Credenciales invalidas");
 
-            AuthDto r = new()
-            {
-                Token = token
-            };
-            return Ok(r);
+            return Ok(lgdResponse);
         }
     }
 }

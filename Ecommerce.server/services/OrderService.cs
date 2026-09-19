@@ -1,5 +1,5 @@
+using Azure.Core;
 using Ecommerce.server.Context;
-using Ecommerce.server.Dto;
 using Ecommerce.server.Mappings;
 using Ecommerce.server.Models;
 using Ecommerce.server.services.interfaces;
@@ -11,11 +11,10 @@ namespace Ecommerce.server.services;
 
 public class OrderService(AppDbContext context) : IOrderService
 {
-    private readonly AppDbContext _context = context;
 
-    public async Task<OrderDto> CheckoutAsync(int userId)
+    public async Task<OrderDto> CheckoutAsync(int userId, CreateOrderDto request)
     {
-        var cartItems = await _context.CartItems
+        var cartItems = await context.CartItems
             .Include(ci => ci.Product)
             .Where(ci => ci.UserId == userId)
             .ToListAsync();
@@ -32,13 +31,15 @@ public class OrderService(AppDbContext context) : IOrderService
             throw new BadRequestException($"No hay suficiente stock de '{withoutStock.Product.Name}'.");
         }
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
+        await using var transaction = await context.Database.BeginTransactionAsync();
 
         var order = new Order
         {
             UserId = userId,
             OrderDate = DateTime.UtcNow,
             Status = "Completed",
+            Address = request.Address,
+            PaymentMethod = request.PaymentMethod,
             Total = cartItems.Sum(ci => ci.Product.Price * ci.Quantity),
             OrderItems = [.. cartItems.Select(ci => new OrderItem
             {
@@ -53,14 +54,14 @@ public class OrderService(AppDbContext context) : IOrderService
             ci.Product.Stock -= ci.Quantity;
         }
 
-        _context.Orders.Add(order);
-        _context.CartItems.RemoveRange(cartItems);
+        context.Orders.Add(order);
+        context.CartItems.RemoveRange(cartItems);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
         await transaction.CommitAsync();
 
         // 'saved' es UN pedido (Order), no una lista -> se mapea directo, sin .Select()
-        var saved = await _context.Orders
+        var saved = await context.Orders
             .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
             .AsNoTracking()
@@ -71,7 +72,7 @@ public class OrderService(AppDbContext context) : IOrderService
 
     public async Task<List<OrderDto>> GetUserOrdersAsync(int userId)
     {
-        var orders = await _context.Orders
+        var orders = await context.Orders
             .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
             .AsNoTracking()

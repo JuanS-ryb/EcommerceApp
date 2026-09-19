@@ -1,0 +1,58 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* App-level helpers */
+.app-gradient-header {
+  --background: linear-gradient(135deg, #0d7d6a 0%, #0b6e5d 100%);
+  --color: #ffffff;
+}
+
+.price-text {
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    color: var(--ion-color-medium);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+    font-size: 0.95rem;
+  }
+}

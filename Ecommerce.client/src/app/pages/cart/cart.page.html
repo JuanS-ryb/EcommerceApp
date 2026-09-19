@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="app-gradient-header">
+    <ion-title>Carrito</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (loading()) {
+    <div class="loading-wrapper">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (!cart() || cart()!.items.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h2>Carrito vacío</h2>
+      <p>No tienes productos en tu carrito todavía.</p>
+    </div>
+  } @else {
+    <ion-list class="cart-list">
+      @for (item of cart()!.items; track item.productId) {
+        <ion-item class="cart-item" lines="full">
+          <ion-thumbnail slot="start" class="cart-thumb">
+            @if (item.product.imageUrl) {
+              <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+            } @else {
+              <div class="thumb-placeholder">
+                <ion-icon name="storefront-outline"></ion-icon>
+              </div>
+            }
+          </ion-thumbnail>
+          <ion-label>
+            <h3>{{ item.product.name }}</h3>
+            <p class="item-price">${{ item.product.price.toFixed(2) }} c/u</p>
+            <p class="item-subtotal">Subtotal: ${{ item.subtotal.toFixed(2) }}</p>
+          </ion-label>
+          <div slot="end" class="qty-controls">
+            <ion-button fill="clear" size="small" (click)="decreaseQuantity(item)">
+              <ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-note class="qty-value">{{ item.quantity }}</ion-note>
+            <ion-button fill="clear" size="small" (click)="increaseQuantity(item)">
+              <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="removeItem(item)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <ion-text color="medium">Total de productos</ion-text>
+        <ion-text>{{ cart()!.items.length }}</ion-text>
+      </div>
+      <div class="summary-row total-row">
+        <ion-text class="total-label">Total</ion-text>
+        <ion-text class="total-amount">${{ cart()!.total.toFixed(2) }}</ion-text>
+      </div>
+    </div>
+  }
+</ion-content>
+
+@if (cart() && cart()!.items.length > 0) {
+  <ion-footer class="cart-footer">
+    <ion-button expand="block" color="primary" (click)="goToCheckout()">
+      Finalizar compra
+      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </ion-footer>
+}

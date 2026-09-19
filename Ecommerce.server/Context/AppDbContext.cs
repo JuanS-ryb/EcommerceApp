@@ -1,4 +1,6 @@
-﻿using Ecommerce.server.Models;
+﻿using System;
+using System.Collections.Generic;
+using Ecommerce.server.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.server.Context;
@@ -57,7 +59,9 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.UserId, "IX_Orders_UserId");
 
+            entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.PaymentMethod).HasMaxLength(50);
             entity.Property(e => e.Status)
                 .HasMaxLength(30)
                 .HasDefaultValue("Completed");

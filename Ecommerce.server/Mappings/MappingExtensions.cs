@@ -28,7 +28,7 @@ public static class MappingExtensions
     {
         Quantity = item.Quantity,
         ProductId = item.ProductId,
-        Product = item.Product?.ToDto(),   // reutiliza el mapeo anterior
+        Product = item.Product?.ToDto() ,   // reutiliza el mapeo anterior
     };
 
     public static OrderItemDto ToDto(this OrderItem item) => new()
@@ -41,6 +41,8 @@ public static class MappingExtensions
     public static OrderDto ToDto(this Order order) => new()
     {
         Id = order.Id,
+        Address = order.Address,
+        PaymentMethod = order.PaymentMethod,
         OrderDate = order.OrderDate,
         Status = order.Status,
         Total = order.Total,
