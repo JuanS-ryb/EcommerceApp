@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-const PORT = 7002;
-const BASE_URL = `https://localhost:${PORT}/api`;
+const BASE_URL = `${environment.backend.name}${environment.backend.port}/api`;
 
 @Injectable({
   providedIn: 'root',
