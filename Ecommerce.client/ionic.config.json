@@ -1,7 +1,10 @@
 {
   "name": "Ecommerce.client",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {
+      "enabled": true
+    },
+    "cordova": {}
   },
   "type": "angular-standalone"
 }

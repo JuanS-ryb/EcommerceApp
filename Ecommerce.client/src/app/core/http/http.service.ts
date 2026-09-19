@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-const PORT = 5084;
-const BASE_URL = `http://localhost:${PORT}/api`;
+const PORT = 7002;
+const BASE_URL = `https://localhost:${PORT}/api`;
 
 @Injectable({
   providedIn: 'root',

@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/products"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mis puntos del trimestre</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="loading-wrapper" *ngIf="loading()">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!loading()">
+    <h2 *ngIf="result() as r">Trimestre {{ r.quarter }} - {{ r.year }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Ejecutado en pesos ($)</ion-label>
+        <ion-input type="number" formControlName="executedPesos"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin-bottom">
+        <ion-label position="floating">Unidades vendidas</ion-label>
+        <ion-input type="number" formControlName="executedUnits"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" [disabled]="form.invalid">
+        Calcular puntos
+      </ion-button>
+    </form>
+
+    <ion-card *ngIf="result() as r" class="ion-margin-top">
+      <ion-card-header>
+        <ion-card-title>Resultado</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="full">
+          <ion-item>
+            <ion-label>Cumplimiento en pesos</ion-label>
+            <ion-note slot="end">{{ r.cumplimientoPesosPct }}%</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Puntos por ventas en pesos</ion-label>
+            <ion-note slot="end">{{ r.puntosPesos }} pts</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Cumplimiento en unidades</ion-label>
+            <ion-note slot="end">{{ r.cumplimientoUnidadesPct }}%</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Puntos por unidades vendidas</ion-label>
+            <ion-note slot="end">{{ r.puntosUnidades }} pts</ion-note>
+          </ion-item>
+        </ion-list>
+
+        <div class="total-row">
+          <span>Total puntos</span>
+          <strong>{{ r.puntosTotal }} pts</strong>
+        </div>
+        <div class="total-row">
+          <span>Valor total</span>
+          <strong>{{ formatPesos(r.valorTotal) }}</strong>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

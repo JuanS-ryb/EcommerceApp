@@ -62,7 +62,7 @@ export class LoginPage {
       next: (res) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('name', res.name);
-        localStorage.setItem('email', res.token);
+        localStorage.setItem('email', res.email);
 
         this.loading.set(false);
         this.presentToast('Bienvenido', 'success');

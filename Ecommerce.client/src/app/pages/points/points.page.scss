@@ -1,0 +1,25 @@
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+h2 {
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ion-color-light);
+}

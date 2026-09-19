@@ -18,6 +18,7 @@ import {
   logOutOutline,
   cartOutline,
   receiptOutline,
+  medicalOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -49,6 +50,7 @@ export class ProfilePage {
       'log-out-outline': logOutOutline,
       'cart-outline': cartOutline,
       'receipt-outline': receiptOutline,
+      'medical-outline': medicalOutline
     });
   }
 

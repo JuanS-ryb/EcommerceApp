@@ -32,4 +32,10 @@ namespace Ecommerce.server.services.interfaces
         Task<OrderDto> CheckoutAsync(int userId, CreateOrderDto request);
         Task<List<OrderDto>> GetUserOrdersAsync(int userId);
     }
+
+    public interface ISalesGoalService
+    {
+        Task<SalesGoalDto> GetCurrentAsync(int userId);
+        Task<SalesGoalDto> UpdateExecutedAsync(int userId, UpdateExecutedRequestDto request);
+    }
 }

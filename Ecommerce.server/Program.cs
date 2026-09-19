@@ -4,7 +4,6 @@ using Ecommerce.server.services.interfaces;
 using Ecommerce.server.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
@@ -54,6 +53,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ISalesGoalService, SalesGoalService>();
+builder.Services.AddScoped<ISalesGoalService, SalesGoalService>();
 //UTILS
 builder.Services.AddScoped<JwtUtils>();
 
