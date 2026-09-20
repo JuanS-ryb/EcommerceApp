@@ -213,8 +213,3 @@ evaluador confirma que el valor correcto es otro.
 - **CORS abierto (`AllowAnyOrigin`)**: como la autenticación es por JWT (no
   cookies de sesión), no hay riesgo de robo de sesión vía CORS; se dejó así
   para simplificar las pruebas desde el navegador y el APK.
-
-## Autor
-
-Prueba técnica desarrollada para el proceso de selección de Grupo Merpes —
-puesto de Desarrollador Full Stack.
